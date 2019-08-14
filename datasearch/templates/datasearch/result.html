@@ -8,21 +8,21 @@
             {% if result_list %}
             <table class="table table-striped">
                 <tr class="row">
-                    <th scope="row" class="col-4">Article Name</th>
+                    <th scope="row" class="col-3">Article Name</th>
                     <!--<th scope="row">Journal</th>-->
                     <th scope="row" class="col-2">Data Class</th>
                     <th scope="row" class="col-1">Species</th>
-                    <th scope="row" class="col-1">Disease/Organ</th>
+                    <th scope="row" class="col-2">Disease/Organ</th>
                     <th scope="row" class="col-2">Cell Type</th>
                     <th scope="row" class="col-2">Sequencing Technology</th>
                 </tr>
                 {% for article in result_list %}
                 <tr class="row">
-                    <td class="col-4"><a href="/{{ article.p_id }}/">{{ article.article_name }}</a></td>
+                    <td class="col-3"><a href="/{{ article.p_id }}/">{{ article.article_name }}</a></td>
                     <!--<td>{{ article.journal }}</td>-->
                     <td class="col-2">{% for x in article.data_set.all %}{{x.get_data_class_display}};{%endfor%}</td>
                     <td class="col-1">{% for x in article.data_set.all %}{{x.species}};{%endfor%}</td>
-                    <td class="col-1">{% for x in article.data_set.all %}{{x.disease_organ}};{%endfor%}</td>
+                    <td class="col-2">{% for x in article.data_set.all %}{{x.disease_organ}};{%endfor%}</td>
                     <td class="col-2">{% for x in article.data_set.all %}{%for type in x.cell_type.all%}{{type}} {%endfor%};{%endfor%}</td>
                     <td class="col-2">{% for x in article.data_set.all %}{{x.tech_type}};{%endfor%}</td>
                 </tr>
