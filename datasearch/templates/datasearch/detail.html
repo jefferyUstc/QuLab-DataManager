@@ -27,7 +27,7 @@
                 {% for x in article.data_set.all %}
                 {% if forloop.counter0 == 0 %}
                 <ul class="list-group" style="margin-bottom:20px;">
-                    <li class="list-group-item"><b>File Path:</b> /home/{{article.up_user|space_to_}}/{{x.get_data_class_display|space_to_}}/{{article.article_name|space_to_}}/</li>
+                    <li class="list-group-item"><b>File Path:</b> /home/qukun/{{article.up_user|space_to_}}/data/{{x.get_data_class_display|space_to_}}/{{article.article_name|space_to_}}/</li>
                 </ul>
                 {% endif %}
                 <ul class="list-group">
