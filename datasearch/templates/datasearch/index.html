@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="page">
+    <div class="row">
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-header"><h3>Article List</h3></div>
+                <div class="card-body" id="index_body">
+                    {% include 'datasearch/index_body.html' %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3">
+            <div class="card">
+                <div class="card-header"><h3>Browse</h3></div>
+                <div class="card-body">
+                    <div class="form-group">
+                        <label>Cell Type: </label>
+                        <div class="card">
+                            <div class="form-group" style="margin: 10px 5px;">
+                                <input class="form-control" type="text" id="cell_type" name="cell_type" value="All;" readonly>
+                                <div>
+                                    <ul id="treeDemo" class="ztree" style="height:394px;overflow:auto;"></ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <h5>Data Class: </h5>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="TCD" name="data_class" checked="checked" class="custom-control-input">
+                        <label class="custom-control-label" for="TCD">T cell development</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="RDA" name="data_class" class="custom-control-input">
+                        <label class="custom-control-label" for="RDA">Retina and dark adaptation</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="DN" name="data_class" class="custom-control-input">
+                        <label class="custom-control-label" for="DN">Decidua NK</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="AD" name="data_class" class="custom-control-input">
+                        <label class="custom-control-label" for="AD">Autoimmune disease</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="MI" name="data_class" class="custom-control-input">
+                        <label class="custom-control-label" for="MI">Mitosis</label>
+                    </div>
+                    <div class="custom-control custom-radio">
+                        <input type="radio" id="BT" name="data_class" class="custom-control-input">
+                        <label class="custom-control-label" for="BT">Brain tumor</label>
+                    </div>
+                    <div style='margin:10px auto;'>
+                        <button type="button" class="btn" id="AJAX_submit" name="AJAX_submit">Update View</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+{% endblock %}
+{% block script %}
+<script LANGUAGE="JavaScript">
+var zTreeObj;
+var setting = {
+	view: {
+		showIcon: false,
+		fontCss : {size:'18px'},
+	},
+	callback: {
+		onClick: onclick
+	}
+};
+
+{% autoescape off %}
+{{tree_js}}
+{% endautoescape %}
+
+$(document).ready(function () {
+    zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+	var radio = document.getElementsByName("data_class");
+    $('#AJAX_submit').on('click',function(){
+        console.log(radio);
+    	for (i=0, length = radio.length; i<length; i++) {
+            console.log(radio[i].checked);
+            if (radio[i].checked) {
+                var rid = radio[i].id;
+            };
+	    };
+        console.log(rid);
+        $('#index_body').html('').load(
+                "{% url 'ajax_get' %}?data_class=" + rid + "&cell_type=" + encodeURIComponent(document.getElementById("cell_type").value)
+         );
+    });
+});
+
+function onclick(event,treeId,treeNode,clickFlag){
+    var nodes = zTreeObj.getSelectedNodes();
+    var arr = "";
+    for(var i in nodes){
+        arr += JSON.stringify(nodes[i].name)+";";
+    };
+    arr = arr.replace(/['"]+/g, '');
+    document.getElementById("cell_type").value = arr;
+};
+</script>
+{% endblock %}

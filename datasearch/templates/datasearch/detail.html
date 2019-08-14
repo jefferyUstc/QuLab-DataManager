@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block style %}
+<style type="text/css">
+    .card{margin-bottom: 20px;}
+</style>
+{% endblock %}
+{% load to_underline %}
+{% block content %}
+<div class="container">
+    <div class="page">
+        <div class="card">
+            <div class="card-header"><h3>Article Information</h3></div>
+            <div class="card-body">
+                <ul class="list-group">
+                    <li class="list-group-item"><b>PubMed ID:</b> <a href="https://www.ncbi.nlm.nih.gov/pubmed/{{article.p_id }}">{{article.p_id }}</a></li>
+                    <li class="list-group-item"><b>Article Name:</b> {{ article.article_name }}</li>
+                    <li class="list-group-item"><b>Journal:</b> {{ article.journal }}</li>
+                    <li class="list-group-item"><b>Published Time:</b> {{ article.pub_time }}</li>
+                    <li class="list-group-item"><b>Upload User:</b> {{ article.up_user }}</li>
+                </ul>
+            </div>
+        </div>
+        {% if article.data_set.all %}
+        <div class="card">
+            <div class="card-header"><h3>Data Information</h3></div>
+            <div class="card-body">
+                {% for x in article.data_set.all %}
+                {% if forloop.counter0 == 0 %}
+                <ul class="list-group" style="margin-bottom:20px;">
+                    <li class="list-group-item"><b>File Path:</b> /home/{{article.up_user|space_to_}}/{{x.get_data_class_display|space_to_}}/{{article.article_name|space_to_}}/</li>
+                </ul>
+                {% endif %}
+                <ul class="list-group">
+                    <li class="list-group-item list-group-item-secondary"><b>Data #{{forloop.counter}}</b></li>
+                    <li class="list-group-item"><b>Data Class:</b> {{ x.get_data_class_display}}</li>
+                    <li class="list-group-item"><b>Species:</b> {{x.species}}</li>
+                    <li class="list-group-item"><b>Disease/Animal Model/Model Organism:</b> {{x.get_ani_model_display}}</li>
+                    <li class="list-group-item"><b>Disease Type/Organ Type:</b> {{x.disease_organ}}</li>
+                    <li class="list-group-item"><b>Cell Type:</b> {% for type in  x.cell_type.all %}{{type}};{% endfor %}</li>
+                    <li class="list-group-item"><b>Data Type:</b> {{x.get_data_type_display}}</li>
+                    <li class="list-group-item"><b>Sequencing Technology:</b> {{x.tech_type}}</li>
+                    <li class="list-group-item"><b>Sequencing Platform:</b> {{x.seq_platform}}</li>
+                    <li class="list-group-item"><b>Number of Cells or Samples:</b> {{x.n_samples}}</li>
+                </ul>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+        {% if article.annotation %}
+        <div class="card">
+            <div class="card-header"><h3>Annotations</h3></div>
+            <div class="card-body">
+                <table class="table table-bordered">
+                    <tr><th>Whether the experiment has control samples?</th><td>{%if article.annotation.control%}<font color="green">YES</font>{%else%}<font color="red">NO</font>{%endif%}</td></tr>
+                    <tr><th>Whether each cell or data has sample information?</th><td>{%if article.annotation.sample%}<font color="green">YES</font>{%else%}<font color="red">NO</font>{%endif%}</td></tr>
+                    <tr><th>Whether the data has gender annotation?</th><td>{%if article.annotation.gender%}<font color="green">YES</font>{%else%}<font color="red">NO</font>{%endif%}</td></tr>
+                    <tr><th>Whether the data has age annotation?</th><td>{%if article.annotation.age%}<font color="green">YES</font>{%else%}<font color="red">NO</font>{%endif%}</td></tr>
+                    <tr><th>Whether the data has clinical information annotation?</th><td>{%if article.annotation.clinical%}<font color="green">YES</font>{%else%}<font color="red">NO</font>{%endif%}</td></tr>
+                </table>
+                <ul class="list-group">
+                    <li class="list-group-item"><b>Summary: </b>{{article.annotation.summary}}</li>
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+        {% if article.metadata_set.all %}
+        <div class="card">
+            <div class="card-header"><h3>Metadata</h3></div>
+            <div class="card-body">
+                {% for x in article.metadata_set.all %}
+                <ul class="list-group">
+                    <li class="list-group-item"><b>Summary:</b> {{x.s_summary}}</li>
+                </ul>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

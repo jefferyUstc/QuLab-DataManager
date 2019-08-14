@@ -1,0 +1,26 @@
+{% if latest_articles %}
+<h5>Recent Articles: </h5>
+<table class="table table-striped">
+    <tr>
+        <th scope="row">Article name</th>
+        <th scope="row">Journal</th>
+        <th scope="row">Data class</th>
+        <th scope="row">Data type</th>
+    </tr>
+    {% for article in latest_articles %}
+    <tr>
+        <td><a href="/{{ article.p_id }}/">{{ article.article_name }}</a></td>
+        <td>{{ article.journal }}</td>
+        <td>{% for x in article.data_set.all %}{{x.get_data_class_display}};{%endfor%}</td>
+        <td>{% for x in article.data_set.all %}{{x.get_data_type_display}};{%endfor%}</td>
+    </tr>
+    {% endfor %}
+</table>
+<!--<ul>-->
+<!--{% for article in latest_articles %}-->
+    <!--<li><a href="/{{ article.p_id }}/">{{ article.article_name }}</a></li>-->
+<!--{% endfor %}-->
+<!--</ul>-->
+{% else %}
+    <b>No article are available.</b>
+{% endif %}

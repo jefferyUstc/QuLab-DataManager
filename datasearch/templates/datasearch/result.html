@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <div class="page">
+    <div class="card">
+        <div class="card-header"><h3>Result List</h3></div>
+        <div class="card-body">
+            {% if result_list %}
+            <table class="table table-striped">
+                <tr class="row">
+                    <th scope="row" class="col-4">Article Name</th>
+                    <!--<th scope="row">Journal</th>-->
+                    <th scope="row" class="col-2">Data Class</th>
+                    <th scope="row" class="col-1">Species</th>
+                    <th scope="row" class="col-1">Disease/Organ</th>
+                    <th scope="row" class="col-2">Cell Type</th>
+                    <th scope="row" class="col-2">Sequencing Technology</th>
+                </tr>
+                {% for article in result_list %}
+                <tr class="row">
+                    <td class="col-4"><a href="/{{ article.p_id }}/">{{ article.article_name }}</a></td>
+                    <!--<td>{{ article.journal }}</td>-->
+                    <td class="col-2">{% for x in article.data_set.all %}{{x.get_data_class_display}};{%endfor%}</td>
+                    <td class="col-1">{% for x in article.data_set.all %}{{x.species}};{%endfor%}</td>
+                    <td class="col-1">{% for x in article.data_set.all %}{{x.disease_organ}};{%endfor%}</td>
+                    <td class="col-2">{% for x in article.data_set.all %}{%for type in x.cell_type.all%}{{type}} {%endfor%};{%endfor%}</td>
+                    <td class="col-2">{% for x in article.data_set.all %}{{x.tech_type}};{%endfor%}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p><b>No article are available.</b></p>
+        {% endif %}
+        </div>
+    </div>
+
+    </div>
+</div>
+{% endblock %}
