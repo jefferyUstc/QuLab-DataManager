@@ -52,7 +52,7 @@ class IndexView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
-        context['latest_articles'] = Article.objects.order_by('pub_time')
+        context['latest_articles'] = Article.objects.order_by('-pub_time')
         context['tree_js'] = self.tree_js
         return context
 
@@ -95,15 +95,14 @@ class ResultView(generic.View):
             functools.reduce(operator.or_, (Q(data__cell_type__type=word) for word in cell_type))
         )
         today = datetime.date.today()
-        result_list = Article.objects.order_by('pub_time').filter(
+        result_list = Article.objects.order_by('-pub_time').filter(
             Q(pub_time__year__gte=today.year - int(pub_time)) &
             Q(data__data_class=data_class) & Q(data__species__icontains=species) &
             Q(data__data_type=data_type) & Q(p_id__in=data_des_list)
         )
         if "All" not in cell_type:
-            # temp = Article.objects.order_by('pub_time').filter(Q(p_id__in=cell_type_list))
             result_list = result_list & cell_type_list
-        return render(request, self.template_name, {'result_list': result_list})
+        return render(request, self.template_name, {'result_list': result_list.distinct()})
 
 
 def search(request):
@@ -115,19 +114,3 @@ def search(request):
     }
 
     return render(request, 'datasearch/search.html', context)
-
-
-'''
-def index(request):
-    latest_articles = Article.objects.order_by("pub_time")
-    context = {'latest_articles': latest_articles}
-    return render(request, "datasearch/index.html", context)
-
-
-def detail(request, p_id):
-    article = get_object_or_404(Article, pk=p_id)
-    data = article.data_set.all()
-    annotations = article.annotation
-    meta = article.metadata_set.all()
-    return render(request, "datasearch/detail.html", {"article": article, "data": data, 'annotations': annotations, 'meta': meta})
-'''
