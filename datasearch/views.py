@@ -74,10 +74,6 @@ class ResultView(generic.View):
         cell_type = cell_type.split(';')
         data_type = request.POST['data_type']
         data_des = request.POST['data_des']
-        # article_name_words = str(article_name).split(' ')
-        # article_name_list = Article.objects.filter(functools.reduce(
-        #     operator.and_, (Q(article_name__icontains=word) for word in article_name_words))
-        # )
         data_des_words = str(data_des).split(' ')
         data_des_list = Article.objects.filter(functools.reduce(
             operator.and_,
@@ -91,16 +87,20 @@ class ResultView(generic.View):
                 ) for word in data_des_words)
             )
         )
-        cell_type_list = Article.objects.filter(
-            functools.reduce(operator.or_, (Q(data__cell_type__type=word) for word in cell_type))
-        )
         today = datetime.date.today()
         result_list = Article.objects.order_by('-pub_time').filter(
             Q(pub_time__year__gte=today.year - int(pub_time)) &
-            Q(data__data_class=data_class) & Q(data__species__icontains=species) &
-            Q(data__data_type=data_type) & Q(p_id__in=data_des_list)
+            Q(data__species__icontains=species) &
+            Q(p_id__in=data_des_list)
         )
+        if data_class != "":
+            result_list = result_list & Article.objects.filter(Q(data__data_class=data_class))
+        if data_type != "":
+            result_list = result_list & Article.objects.filter(Q(data__data_type=data_type))
         if "All" not in cell_type:
+            cell_type_list = Article.objects.filter(
+                functools.reduce(operator.or_, (Q(data__cell_type__type=word) for word in cell_type))
+            )
             result_list = result_list & cell_type_list
         return render(request, self.template_name, {'result_list': result_list.distinct()})
 
