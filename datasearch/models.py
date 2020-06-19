@@ -74,7 +74,7 @@ class Data(models.Model):
     ani_model = models.CharField(max_length=2, choices=ANI_MODEL, verbose_name='Disease/Animal Model/Model Organism')
     disease_organ = models.CharField(max_length=100, verbose_name='Disease Type/Organ Type')
     cell_type = models.ManyToManyField(CellType, verbose_name='Cell Type')
-    data_type = models.CharField(max_length=6, choices=DATA_TYPE, verbose_name='Data Type')
+    data_type = models.CharField(max_length=50, verbose_name='Data Type')
     tech_type = models.CharField(max_length=100, null=True, verbose_name='Sequencing Technology')
     seq_platform = models.CharField(max_length=100, null=True, verbose_name='Sequencing Platform')
     n_samples = models.CharField(max_length=50, null=True, verbose_name='Number of Cells or Samples')
