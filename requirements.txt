@@ -1,5 +1,5 @@
 Django==2.2.4
 mysqlclient==1.4.2.post1
 pytz==2019.2
-sqlparse==0.3.0
+sqlparse==0.4.4
 uWSGI==2.0.18
